@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Butterfly 🦋</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    height:100vh;
+    background: radial-gradient(circle at top, #2b1055, #1a062e 60%);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    font-family:'Poppins', sans-serif;
+    color:white;
+    overflow:hidden;
+}
+
+/* Soft overlay glow */
+body::before{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(255,255,255,0.03);
+    backdrop-filter: blur(2px);
+}
+
+/* Main container */
+.container{
+    position:relative;
+    z-index:2;
+    max-width:700px;
+    padding:30px;
+    animation:fadeIn 2s ease-in-out;
+}
+
+/* Elegant Cursive Title */
+h1{
+    font-family:'Great Vibes', cursive;
+    font-size:4rem;
+    margin-bottom:10px;
+    letter-spacing:2px;
+    text-shadow:0 0 20px rgba(255,192,203,0.8);
+}
+
+/* Subtitle */
+h2{
+    font-weight:300;
+    margin-bottom:20px;
+    opacity:0.9;
+}
+
+/* Photo */
+img{
+    width:230px;
+    height:230px;
+    object-fit:cover;
+    border-radius:50%;
+    border:3px solid rgba(255,255,255,0.7);
+    box-shadow:0 0 40px rgba(255,182,193,0.9);
+    margin:20px 0;
+    transition:0.5s;
+}
+
+img:hover{
+    transform:scale(1.05);
+}
+
+/* Message */
+.message{
+    font-size:1.1rem;
+    line-height:1.8;
+    margin-bottom:25px;
+    opacity:0.95;
+}
+
+/* Elegant Music Button */
+.music-btn{
+    padding:12px 30px;
+    border-radius:30px;
+    border:2px solid white;
+    background:transparent;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.4s;
+    box-shadow:0 0 15px rgba(255,255,255,0.4);
+}
+
+.music-btn:hover{
+    background:white;
+    color:#2b1055;
+    transform:scale(1.1);
+}
+
+/* Fade animation */
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+/* Floating tiny stars */
+.star{
+    position:absolute;
+    width:3px;
+    height:3px;
+    background:white;
+    border-radius:50%;
+    opacity:0.8;
+    animation:float 10s linear infinite;
+}
+
+@keyframes float{
+    0%{transform:translateY(100vh);}
+    100%{transform:translateY(-10vh);}
+}
+
+footer{
+    margin-top:20px;
+    font-size:0.9rem;
+    opacity:0.8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Happy Birthday Butterfly 🦋</h1>
+    <h2>My Forever Magic ✨</h2>
+
+    <img src="herphoto.jpg" alt="Butterfly">
+
+    <div class="message">
+        My sweet Butterfly,  
+        You are the most beautiful chapter of my life.  
+        Your smile lights up my darkest days,  
+        and your love makes my world complete.  
+        May your birthday be as magical as you are.  
+        I love you endlessly 💖
+    </div>
+
+    <button class="music-btn" onclick="playMusic()">🎵 Play Our Song</button>
+
+    <footer>With All My Love ❤️</footer>
+</div>
+
+<audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+function playMusic(){
+    document.getElementById("bgMusic").play();
+}
+
+/* Floating stars */
+function createStar(){
+    const star = document.createElement("div");
+    star.classList.add("star");
+    star.style.left = Math.random()*100 + "vw";
+    star.style.animationDuration = (Math.random()*5+5)+"s";
+    document.body.appendChild(star);
+
+    setTimeout(()=>{ star.remove(); },10000);
+}
+
+setInterval(createStar, 300);
+</script>
+
+</body>
+</html>
