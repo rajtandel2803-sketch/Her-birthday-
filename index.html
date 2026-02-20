@@ -12,23 +12,44 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    scroll-behavior:smooth;
+    font-family:'Poppins',sans-serif;
 }
 
-section{
+body{
+    overflow:hidden;
+    background:black;
+}
+
+/* STORY CONTAINER */
+.story-container{
+    position:relative;
+    width:100vw;
     height:100vh;
+}
+
+/* STORY SLIDES */
+.story{
+    position:absolute;
     width:100%;
+    height:100%;
     display:flex;
     justify-content:center;
     align-items:center;
     flex-direction:column;
     text-align:center;
-    position:relative;
-    overflow:hidden;
+    color:white;
+    opacity:0;
+    transition:opacity 0.5s ease;
 }
 
-/* INTRO SECTION */
-#intro video{
+.story.active{
+    opacity:1;
+    z-index:1;
+}
+
+/* Backgrounds */
+.story video,
+.story img.bg{
     position:absolute;
     width:100%;
     height:100%;
@@ -36,147 +57,148 @@ section{
     z-index:-1;
 }
 
-#intro .overlay{
-    position:absolute;
-    width:100%;
-    height:100%;
-    background:rgba(173,216,230,0.4);
-}
-
+/* Text Style */
 h1{
     font-family:'Great Vibes',cursive;
-    font-size:4rem;
-    color:#0077b6;
-    text-shadow:0 0 15px white;
+    font-size:3rem;
+    text-shadow:0 0 20px black;
 }
 
-button{
+.message{
+    max-width:80%;
     margin-top:20px;
-    padding:12px 30px;
-    border-radius:30px;
-    border:none;
-    background:#0077b6;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-    transition:0.3s;
+    line-height:1.6;
 }
 
-button:hover{
-    background:#023e8a;
-    transform:scale(1.1);
-}
-
-/* MESSAGE SECTION */
-#message{
-    background:linear-gradient(to bottom,#dff6ff,#bde0fe);
-    color:#003049;
-    padding:40px;
-}
-
-.message-text{
-    max-width:600px;
-    font-size:1.2rem;
-    line-height:1.8;
-    margin-top:20px;
-}
-
-/* PHOTO SECTION */
-#photo{
-    background:#cceeff;
-}
-
-#photo img{
-    width:300px;
-    height:300px;
-    border-radius:20px;
-    object-fit:cover;
-    box-shadow:0 0 30px rgba(0,119,182,0.6);
-    transition:0.5s;
-}
-
-#photo img:hover{
-    transform:scale(1.05);
-}
-
-/* Flying Butterflies */
-.butterfly{
+/* Progress Bars */
+.progress{
     position:absolute;
-    font-size:25px;
-    animation:fly 15s linear infinite;
-    opacity:0.8;
+    top:10px;
+    left:10px;
+    right:10px;
+    display:flex;
+    gap:5px;
 }
 
-@keyframes fly{
-    0%{ transform:translateX(-10vw) translateY(80vh);}
-    50%{ transform:translateX(50vw) translateY(30vh);}
-    100%{ transform:translateX(110vw) translateY(10vh);}
+.progress div{
+    flex:1;
+    height:4px;
+    background:rgba(255,255,255,0.3);
+    overflow:hidden;
 }
+
+.progress div span{
+    display:block;
+    height:100%;
+    width:0%;
+    background:white;
+}
+
+/* Tap Areas */
+.tap{
+    position:absolute;
+    top:0;
+    height:100%;
+    width:50%;
+}
+
+.tap.left{ left:0; }
+.tap.right{ right:0; }
 </style>
 </head>
 <body>
 
-<!-- INTRO SECTION -->
-<section id="intro">
+<div class="story-container">
+
+<div class="progress">
+    <div><span></span></div>
+    <div><span></span></div>
+    <div><span></span></div>
+</div>
+
+<!-- STORY 1 -->
+<div class="story active">
     <video autoplay muted loop>
-        <source src="intro.mp4.mp4" type="video/mp4">
+        <source src="intro.mp4" type="video/mp4">
     </video>
-    <div class="overlay"></div>
     <h1>For My Butterfly 🦋</h1>
-    <button onclick="scrollToSection('message')">Enter My Heart 💙</button>
-</section>
+</div>
 
-<!-- MESSAGE SECTION -->
-<section id="message">
-    <h1>Happy Birthday Butterfly 🦋</h1>
-    <div class="message-text">
-        My sweet Butterfly, 💙<br><br>
-        You are my calm sky and my brightest sunshine.  
-        You fluttered into my life and filled it with colors I never knew existed.  
-        Your smile is my peace, your love is my strength.  
-        On your special day, I promise to always protect your happiness,  
-        cherish your heart, and choose you every single day.  
-        Happy Birthday, my beautiful girl.  
-        I love you endlessly. 💙✨
+<!-- STORY 2 -->
+<div class="story">
+    <img src="herphoto.jpg" class="bg">
+    <h1>Happy Birthday 💙</h1>
+    <div class="message">
+        My sweet Butterfly, you are my calm sky and brightest sunshine.  
+        I love you endlessly. 🦋✨
     </div>
+</div>
 
-    <button onclick="playMusic()">🎵 Play Our Song</button>
-    <button onclick="scrollToSection('photo')">See Your Magic ✨</button>
+<!-- STORY 3 -->
+<div class="story">
+    <img src="herphoto.jpg" class="bg">
+    <h1>Forever Yours 💙</h1>
+</div>
 
-    <audio id="music" loop>
-        <source src="music.mp3.mp3" type="audio/mpeg">
-    </audio>
-</section>
+<div class="tap left"></div>
+<div class="tap right"></div>
 
-<!-- PHOTO SECTION -->
-<section id="photo">
-    <h1>My Beautiful Butterfly 🦋</h1>
-    <img src="herphoto.jpg.JPG" alt="Butterfly">
-    <button onclick="scrollToSection('intro')">Back To Start 💙</button>
-</section>
+</div>
+
+<audio id="music" src="music.mp3"></audio>
 
 <script>
-function scrollToSection(id){
-    document.getElementById(id).scrollIntoView({behavior:"smooth"});
+const stories = document.querySelectorAll(".story");
+const progressBars = document.querySelectorAll(".progress div span");
+const leftTap = document.querySelector(".tap.left");
+const rightTap = document.querySelector(".tap.right");
+const music = document.getElementById("music");
+
+let current = 0;
+let duration = 5000;
+let timer;
+
+function showStory(index){
+    stories.forEach(s => s.classList.remove("active"));
+    stories[index].classList.add("active");
+
+    progressBars.forEach(bar => bar.style.width="0%");
+    animateProgress(index);
+
+    if(index === 0){
+        music.play().catch(()=>{});
+    }
 }
 
-function playMusic(){
-    document.getElementById("music").play();
+function animateProgress(index){
+    let width = 0;
+    clearInterval(timer);
+    timer = setInterval(()=>{
+        width += 1;
+        progressBars[index].style.width = width + "%";
+        if(width >= 100){
+            clearInterval(timer);
+            nextStory();
+        }
+    }, duration/100);
 }
 
-/* Generate butterflies continuously */
-function createButterfly(){
-    const butterfly = document.createElement("div");
-    butterfly.classList.add("butterfly");
-    butterfly.innerHTML = "🦋";
-    butterfly.style.top = Math.random()*80 + "vh";
-    butterfly.style.animationDuration = (Math.random()*5+10)+"s";
-    document.body.appendChild(butterfly);
-
-    setTimeout(()=>{ butterfly.remove(); },15000);
+function nextStory(){
+    current++;
+    if(current >= stories.length) current = 0;
+    showStory(current);
 }
 
-setInterval(createButterfly,2000);
+function prevStory(){
+    current--;
+    if(current < 0) current = stories.length-1;
+    showStory(current);
+}
+
+rightTap.addEventListener("click", nextStory);
+leftTap.addEventListener("click", prevStory);
+
+showStory(current);
 </script>
 
 </body>
