@@ -64,7 +64,7 @@ body{
 
 /* MESSAGE BG */
 .message-screen{
-    background:linear-gradient(135deg,#000,#1a1a1a);
+    background:linear-gradient(135deg,#000000,#1a1a1a);
 }
 
 /* TEXT */
@@ -82,18 +82,7 @@ h1{
     text-shadow:0 0 15px black;
 }
 
-/* TAP AREAS */
-.tap{
-    position:absolute;
-    top:0;
-    width:50%;
-    height:100%;
-    z-index:10;
-}
-.tap.left{ left:0; }
-.tap.right{ right:0; }
-
-/* TAP TO START OVERLAY */
+/* TAP TO START */
 #startOverlay{
     position:absolute;
     inset:0;
@@ -105,6 +94,22 @@ h1{
     color:white;
     font-size:1.2rem;
     letter-spacing:1px;
+}
+
+/* SWIPE HINT */
+#swipeHint{
+    position:absolute;
+    bottom:40px;
+    color:white;
+    font-size:0.9rem;
+    opacity:0;
+    animation:fade 2s infinite;
+    z-index:20;
+}
+
+@keyframes fade{
+    0%,100%{opacity:0;}
+    50%{opacity:0.8;}
 }
 </style>
 </head>
@@ -144,8 +149,7 @@ h1{
         </div>
     </div>
 
-    <div class="tap left"></div>
-    <div class="tap right"></div>
+    <div id="swipeHint">Swipe ➜</div>
 </div>
 
 <audio id="music" src="music.mp3.mp3" loop></audio>
@@ -155,27 +159,32 @@ const stories = document.querySelectorAll(".story");
 const introVideo = document.getElementById("introVideo");
 const music = document.getElementById("music");
 const overlay = document.getElementById("startOverlay");
+const swipeHint = document.getElementById("swipeHint");
 
 let current = 0;
 let musicStarted = false;
+let swipeEnabled = false;
+let startX = 0;
 
-/* USER TAP TO ENABLE SOUND */
+/* ENABLE SOUND */
 overlay.addEventListener("click",()=>{
     overlay.style.display="none";
     introVideo.muted = false;
     introVideo.play().catch(()=>{});
 });
 
-/* START MUSIC AFTER INTRO VIDEO */
+/* AFTER INTRO */
 introVideo.addEventListener("ended",()=>{
     if(!musicStarted){
         music.volume = 0.6;
         music.play().catch(()=>{});
         musicStarted = true;
     }
+    swipeEnabled = true;
+    swipeHint.style.opacity = 1;
 });
 
-/* STORY CONTROL */
+/* STORY SHOW */
 function showStory(index){
     stories.forEach((s,i)=>{
         s.classList.remove("active","prev");
@@ -184,21 +193,26 @@ function showStory(index){
     stories[index].classList.add("active");
 }
 
-function nextStory(){
-    if(current < stories.length-1){
+/* SWIPE HANDLERS */
+document.addEventListener("touchstart",(e)=>{
+    if(!swipeEnabled) return;
+    startX = e.touches[0].clientX;
+});
+
+document.addEventListener("touchend",(e)=>{
+    if(!swipeEnabled) return;
+    let endX = e.changedTouches[0].clientX;
+    let diff = startX - endX;
+
+    if(diff > 50 && current < stories.length - 1){
         current++;
         showStory(current);
     }
-}
-function prevStory(){
-    if(current > 0){
+    if(diff < -50 && current > 0){
         current--;
         showStory(current);
     }
-}
-
-document.querySelector(".tap.right").addEventListener("click", nextStory);
-document.querySelector(".tap.left").addEventListener("click", prevStory);
+});
 </script>
 
 </body>
