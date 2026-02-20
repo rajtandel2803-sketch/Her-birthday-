@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,61 +16,68 @@
 }
 
 body{
-    overflow:hidden;
     background:black;
+    overflow:hidden;
 }
 
-/* STORY CONTAINER */
+/* CONTAINER */
 .story-container{
     position:relative;
     width:100vw;
     height:100vh;
+    overflow:hidden;
 }
 
-/* STORY SLIDES */
+/* STORIES */
 .story{
     position:absolute;
-    width:100%;
-    height:100%;
+    inset:0;
     display:flex;
+    flex-direction:column;
     justify-content:center;
     align-items:center;
-    flex-direction:column;
     text-align:center;
     color:white;
-    opacity:0;
-    transition:opacity 0.5s ease;
+    transform:translateX(100%);
+    transition:transform 0.6s ease;
 }
 
 .story.active{
-    opacity:1;
+    transform:translateX(0);
     z-index:1;
 }
 
-/* Backgrounds */
+.story.prev{
+    transform:translateX(-100%);
+}
+
+/* BACKGROUND */
 .story video,
 .story img.bg{
     position:absolute;
+    inset:0;
     width:100%;
     height:100%;
     object-fit:cover;
     z-index:-1;
 }
 
-/* Text Style */
+/* TEXT */
 h1{
     font-family:'Great Vibes',cursive;
-    font-size:3rem;
-    text-shadow:0 0 20px black;
+    font-size:3.2rem;
+    text-shadow:0 0 25px black;
 }
 
 .message{
-    max-width:80%;
+    max-width:85%;
     margin-top:20px;
-    line-height:1.6;
+    line-height:1.8;
+    font-size:1.05rem;
+    text-shadow:0 0 10px black;
 }
 
-/* Progress Bars */
+/* PROGRESS */
 .progress{
     position:absolute;
     top:10px;
@@ -78,37 +85,54 @@ h1{
     right:10px;
     display:flex;
     gap:5px;
+    z-index:10;
 }
 
 .progress div{
     flex:1;
     height:4px;
     background:rgba(255,255,255,0.3);
-    overflow:hidden;
 }
 
-.progress div span{
+.progress span{
     display:block;
     height:100%;
     width:0%;
     background:white;
 }
 
-/* Tap Areas */
+/* TAP */
 .tap{
     position:absolute;
     top:0;
-    height:100%;
     width:50%;
+    height:100%;
+    z-index:20;
+}
+.tap.left{left:0;}
+.tap.right{right:0;}
+
+/* CONFETTI */
+.confetti{
+    position:absolute;
+    width:8px;
+    height:8px;
+    background:randomColor;
+    top:-10px;
+    animation:fall linear infinite;
 }
 
-.tap.left{ left:0; }
-.tap.right{ right:0; }
+@keyframes fall{
+    to{
+        transform:translateY(110vh) rotate(360deg);
+    }
+}
 </style>
 </head>
+
 <body>
 
-<div class="story-container">
+<div class="story-container" id="container">
 
 <div class="progress">
     <div><span></span></div>
@@ -118,10 +142,14 @@ h1{
 
 <!-- STORY 1 -->
 <div class="story active">
-    <video autoplay muted loop>
+    <video muted playsinline>
         <source src="intro.mp4.mp4" type="video/mp4">
     </video>
     <h1>For My Butterfly 🦋</h1>
+    <div class="message">
+        Today isn’t just your birthday…  
+        it’s the day the world became more beautiful 💙
+    </div>
 </div>
 
 <!-- STORY 2 -->
@@ -129,8 +157,9 @@ h1{
     <img src="herphoto.jpg" class="bg">
     <h1>Happy Birthday 💙</h1>
     <div class="message">
-        My sweet Butterfly, you are my calm sky and brightest sunshine.  
-        I love you endlessly. 🦋✨
+        My pretty Butterfly,<br>
+        you make my heart smile in ways words can’t explain.<br>
+        With you, every moment feels magical ✨🦋
     </div>
 </div>
 
@@ -138,6 +167,11 @@ h1{
 <div class="story">
     <img src="herphoto.jpg" class="bg">
     <h1>Forever Yours 💙</h1>
+    <div class="message">
+        I don’t just love you…<br>
+        I choose you, today and always 💕<br>
+        Happy Birthday, my forever 🦋🎂
+    </div>
 </div>
 
 <div class="tap left"></div>
@@ -145,38 +179,51 @@ h1{
 
 </div>
 
-<audio id="music" src="music.mp3"></audio>
+<audio id="music" src="music.mp3" loop></audio>
 
 <script>
 const stories = document.querySelectorAll(".story");
-const progressBars = document.querySelectorAll(".progress div span");
-const leftTap = document.querySelector(".tap.left");
-const rightTap = document.querySelector(".tap.right");
+const bars = document.querySelectorAll(".progress span");
 const music = document.getElementById("music");
+const container = document.getElementById("container");
 
 let current = 0;
 let duration = 5000;
 let timer;
+let musicStarted = false;
 
+/* SHOW STORY */
 function showStory(index){
-    stories.forEach(s => s.classList.remove("active"));
+    stories.forEach((s,i)=>{
+        s.classList.remove("active","prev");
+        if(i < index) s.classList.add("prev");
+
+        const v = s.querySelector("video");
+        if(v){ v.pause(); v.currentTime = 0; }
+
+        bars[i].style.width = "0%";
+    });
+
     stories[index].classList.add("active");
 
-    progressBars.forEach(bar => bar.style.width="0%");
-    animateProgress(index);
+    const activeVideo = stories[index].querySelector("video");
+    if(activeVideo) activeVideo.play().catch(()=>{});
 
-    if(index === 0){
-        music.play().catch(()=>{});
+    startProgress(index);
+
+    if(index === 1){
+        launchConfetti();
     }
 }
 
-function animateProgress(index){
-    let width = 0;
+/* PROGRESS */
+function startProgress(index){
+    let w = 0;
     clearInterval(timer);
     timer = setInterval(()=>{
-        width += 1;
-        progressBars[index].style.width = width + "%";
-        if(width >= 100){
+        w++;
+        bars[index].style.width = w + "%";
+        if(w >= 100){
             clearInterval(timer);
             nextStory();
         }
@@ -184,19 +231,38 @@ function animateProgress(index){
 }
 
 function nextStory(){
-    current++;
-    if(current >= stories.length) current = 0;
+    current = (current + 1) % stories.length;
     showStory(current);
 }
 
 function prevStory(){
-    current--;
-    if(current < 0) current = stories.length-1;
+    current = (current - 1 + stories.length) % stories.length;
     showStory(current);
 }
 
-rightTap.addEventListener("click", nextStory);
-leftTap.addEventListener("click", prevStory);
+/* CONFETTI */
+function launchConfetti(){
+    for(let i=0;i<40;i++){
+        const conf = document.createElement("div");
+        conf.className = "confetti";
+        conf.style.left = Math.random()*100 + "vw";
+        conf.style.background = `hsl(${Math.random()*360},100%,50%)`;
+        conf.style.animationDuration = (2+Math.random()*3)+"s";
+        container.appendChild(conf);
+        setTimeout(()=>conf.remove(),5000);
+    }
+}
+
+/* TAPS */
+document.querySelector(".tap.right").addEventListener("click",()=>{
+    if(!musicStarted){
+        music.play().catch(()=>{});
+        musicStarted = true;
+    }
+    nextStory();
+});
+
+document.querySelector(".tap.left").addEventListener("click",prevStory);
 
 showStory(current);
 </script>
