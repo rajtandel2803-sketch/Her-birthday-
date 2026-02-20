@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,171 +12,171 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
+    scroll-behavior:smooth;
 }
 
-body{
+section{
     height:100vh;
-    background: radial-gradient(circle at top, #2b1055, #1a062e 60%);
+    width:100%;
     display:flex;
     justify-content:center;
     align-items:center;
+    flex-direction:column;
     text-align:center;
-    font-family:'Poppins', sans-serif;
-    color:white;
+    position:relative;
     overflow:hidden;
 }
 
-/* Soft overlay glow */
-body::before{
-    content:"";
+/* INTRO SECTION */
+#intro video{
     position:absolute;
     width:100%;
     height:100%;
-    background:rgba(255,255,255,0.03);
-    backdrop-filter: blur(2px);
-}
-
-/* Main container */
-.container{
-    position:relative;
-    z-index:2;
-    max-width:700px;
-    padding:30px;
-    animation:fadeIn 2s ease-in-out;
-}
-
-/* Elegant Cursive Title */
-h1{
-    font-family:'Great Vibes', cursive;
-    font-size:4rem;
-    margin-bottom:10px;
-    letter-spacing:2px;
-    text-shadow:0 0 20px rgba(255,192,203,0.8);
-}
-
-/* Subtitle */
-h2{
-    font-weight:300;
-    margin-bottom:20px;
-    opacity:0.9;
-}
-
-/* Photo */
-img{
-    width:230px;
-    height:230px;
     object-fit:cover;
-    border-radius:50%;
-    border:3px solid rgba(255,255,255,0.7);
-    box-shadow:0 0 40px rgba(255,182,193,0.9);
-    margin:20px 0;
-    transition:0.5s;
+    z-index:-1;
 }
 
-img:hover{
-    transform:scale(1.05);
+#intro .overlay{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(173,216,230,0.4);
 }
 
-/* Message */
-.message{
-    font-size:1.1rem;
-    line-height:1.8;
-    margin-bottom:25px;
-    opacity:0.95;
+h1{
+    font-family:'Great Vibes',cursive;
+    font-size:4rem;
+    color:#0077b6;
+    text-shadow:0 0 15px white;
 }
 
-/* Elegant Music Button */
-.music-btn{
+button{
+    margin-top:20px;
     padding:12px 30px;
     border-radius:30px;
-    border:2px solid white;
-    background:transparent;
+    border:none;
+    background:#0077b6;
     color:white;
     font-size:16px;
     cursor:pointer;
-    transition:0.4s;
-    box-shadow:0 0 15px rgba(255,255,255,0.4);
+    transition:0.3s;
 }
 
-.music-btn:hover{
-    background:white;
-    color:#2b1055;
+button:hover{
+    background:#023e8a;
     transform:scale(1.1);
 }
 
-/* Fade animation */
-@keyframes fadeIn{
-    from{opacity:0; transform:translateY(20px);}
-    to{opacity:1; transform:translateY(0);}
+/* MESSAGE SECTION */
+#message{
+    background:linear-gradient(to bottom,#dff6ff,#bde0fe);
+    color:#003049;
+    padding:40px;
 }
 
-/* Floating tiny stars */
-.star{
-    position:absolute;
-    width:3px;
-    height:3px;
-    background:white;
-    border-radius:50%;
-    opacity:0.8;
-    animation:float 10s linear infinite;
-}
-
-@keyframes float{
-    0%{transform:translateY(100vh);}
-    100%{transform:translateY(-10vh);}
-}
-
-footer{
+.message-text{
+    max-width:600px;
+    font-size:1.2rem;
+    line-height:1.8;
     margin-top:20px;
-    font-size:0.9rem;
+}
+
+/* PHOTO SECTION */
+#photo{
+    background:#cceeff;
+}
+
+#photo img{
+    width:300px;
+    height:300px;
+    border-radius:20px;
+    object-fit:cover;
+    box-shadow:0 0 30px rgba(0,119,182,0.6);
+    transition:0.5s;
+}
+
+#photo img:hover{
+    transform:scale(1.05);
+}
+
+/* Flying Butterflies */
+.butterfly{
+    position:absolute;
+    font-size:25px;
+    animation:fly 15s linear infinite;
     opacity:0.8;
+}
+
+@keyframes fly{
+    0%{ transform:translateX(-10vw) translateY(80vh);}
+    50%{ transform:translateX(50vw) translateY(30vh);}
+    100%{ transform:translateX(110vw) translateY(10vh);}
 }
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<!-- INTRO SECTION -->
+<section id="intro">
+    <video autoplay muted loop>
+        <source src="intro.mp4.MP4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+    <h1>For My Butterfly 🦋</h1>
+    <button onclick="scrollToSection('message')">Enter My Heart 💙</button>
+</section>
+
+<!-- MESSAGE SECTION -->
+<section id="message">
     <h1>Happy Birthday Butterfly 🦋</h1>
-    <h2>My Forever Magic ✨</h2>
-
-    <img src="herphoto.jpg.JPG" alt="Butterfly">
-
-    <div class="message">
-        My sweet Butterfly,  
-        You are the most beautiful chapter of my life.  
-        Your smile lights up my darkest days,  
-        and your love makes my world complete.  
-        May your birthday be as magical as you are.  
-        I love you endlessly 💖
+    <div class="message-text">
+        My sweet Butterfly, 💙<br><br>
+        You are my calm sky and my brightest sunshine.  
+        You fluttered into my life and filled it with colors I never knew existed.  
+        Your smile is my peace, your love is my strength.  
+        On your special day, I promise to always protect your happiness,  
+        cherish your heart, and choose you every single day.  
+        Happy Birthday, my beautiful girl.  
+        I love you endlessly. 💙✨
     </div>
 
-    <button class="music-btn" onclick="playMusic()">🎵 Play Our Song</button>
+    <button onclick="playMusic()">🎵 Play Our Song</button>
+    <button onclick="scrollToSection('photo')">See Your Magic ✨</button>
 
-    <footer>With All My Love ❤️</footer>
-</div>
+    <audio id="music" loop>
+        <source src="music.mp3.mp3" type="audio/mpeg">
+    </audio>
+</section>
 
-<audio id="bgMusic" loop>
-    <source src="music.mp3.mp3" type="audio/mpeg">
-</audio>
+<!-- PHOTO SECTION -->
+<section id="photo">
+    <h1>My Beautiful Butterfly 🦋</h1>
+    <img src="herphoto.jpg.JPG" alt="Butterfly">
+    <button onclick="scrollToSection('intro')">Back To Start 💙</button>
+</section>
 
 <script>
+function scrollToSection(id){
+    document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
+
 function playMusic(){
-    document.getElementById("bgMusic").play();
+    document.getElementById("music").play();
 }
 
-/* Floating stars */
-function createStar(){
-    const star = document.createElement("div");
-    star.classList.add("star");
-    star.style.left = Math.random()*100 + "vw";
-    star.style.animationDuration = (Math.random()*5+5)+"s";
-    document.body.appendChild(star);
+/* Generate butterflies continuously */
+function createButterfly(){
+    const butterfly = document.createElement("div");
+    butterfly.classList.add("butterfly");
+    butterfly.innerHTML = "🦋";
+    butterfly.style.top = Math.random()*80 + "vh";
+    butterfly.style.animationDuration = (Math.random()*5+10)+"s";
+    document.body.appendChild(butterfly);
 
-    setTimeout(()=>{ star.remove(); },10000);
+    setTimeout(()=>{ butterfly.remove(); },15000);
 }
 
-setInterval(createStar, 300);
+setInterval(createButterfly,2000);
 </script>
 
 </body>
