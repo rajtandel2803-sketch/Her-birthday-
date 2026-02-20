@@ -21,7 +21,7 @@ body{
 }
 
 /* CONTAINER */
-.story-container{
+#container{
     position:relative;
     width:100vw;
     height:100vh;
@@ -51,7 +51,7 @@ body{
     transform:translateX(-100%);
 }
 
-/* BACKGROUND */
+/* VIDEO & IMAGE */
 .story video,
 .story img.bg{
     position:absolute;
@@ -60,6 +60,11 @@ body{
     height:100%;
     object-fit:cover;
     z-index:-1;
+}
+
+/* BACKGROUNDS */
+.message-screen{
+    background:linear-gradient(135deg,#000000,#1a1a1a);
 }
 
 /* TEXT */
@@ -73,161 +78,92 @@ h1{
     max-width:85%;
     margin-top:20px;
     line-height:1.8;
-    font-size:1.05rem;
-    text-shadow:0 0 10px black;
+    font-size:1.1rem;
+    text-shadow:0 0 15px black;
 }
 
-/* PROGRESS */
-.progress{
-    position:absolute;
-    top:10px;
-    left:10px;
-    right:10px;
-    display:flex;
-    gap:5px;
-    z-index:10;
-}
-
-.progress div{
-    flex:1;
-    height:4px;
-    background:rgba(255,255,255,0.3);
-}
-
-.progress span{
-    display:block;
-    height:100%;
-    width:0%;
-    background:white;
-}
-
-/* TAP */
+/* TAP AREAS */
 .tap{
     position:absolute;
     top:0;
     width:50%;
     height:100%;
-    z-index:20;
+    z-index:10;
 }
-.tap.left{left:0;}
-.tap.right{right:0;}
-
-/* CONFETTI */
-.confetti{
-    position:absolute;
-    width:8px;
-    height:8px;
-    background:randomColor;
-    top:-10px;
-    animation:fall linear infinite;
-}
-
-@keyframes fall{
-    to{
-        transform:translateY(110vh) rotate(360deg);
-    }
-}
+.tap.left{ left:0; }
+.tap.right{ right:0; }
 </style>
 </head>
 
 <body>
 
-<div class="story-container" id="container">
+<div id="container">
 
-<div class="progress">
-    <div><span></span></div>
-    <div><span></span></div>
-    <div><span></span></div>
-</div>
-
-<!-- STORY 1 -->
-<div class="story active">
-    <video muted playsinline>
-        <source src="intro.mp4.mp4" type="video/mp4">
-    </video>
-    <h1>For My Butterfly 🦋</h1>
-    <div class="message">
-        Today isn’t just your birthday…  
-        it’s the day the world became more beautiful 💙
+    <!-- INTRO VIDEO -->
+    <div class="story active">
+        <video src="intro.mp4.mp4" muted playsinline></video>
+        <h1>Happy Birthday 🦋</h1>
+        <div class="message">
+            To my beautiful Butterfly 💗
+        </div>
     </div>
-</div>
 
-<!-- STORY 2 -->
-<div class="story">
-    <img src="herphoto.jpg.JPG" class="bg">
-    <h1>Happy Birthday 💙</h1>
-    <div class="message">
-        My pretty Butterfly,<br>
-        you make my heart smile in ways words can’t explain.<br>
-        With you, every moment feels magical ✨🦋
+    <!-- MESSAGE -->
+    <div class="story message-screen">
+        <h1>My Love 💕</h1>
+        <div class="message">
+            I don’t just love you…<br>
+            I choose you every single day.<br>
+            With you, forever feels short ✨
+        </div>
     </div>
-</div>
 
-<!-- STORY 3 -->
-<div class="story">
-    <img src="herphoto.jpg.JPG" class="bg">
-    <h1>Forever Yours 💙</h1>
-    <div class="message">
-        I don’t just love you…<br>
-        I choose you, today and always 💕<br>
-        Happy Birthday, my forever 🦋🎂
+    <!-- HER PHOTO -->
+    <div class="story">
+        <img src="herphoto.jpg.JPG" class="bg">
+        <h1>Forever Yours 💙</h1>
+        <div class="message">
+            Happy Birthday, my forever 🦋🎂
+        </div>
     </div>
+
+    <div class="tap left"></div>
+    <div class="tap right"></div>
 </div>
 
-<div class="tap left"></div>
-<div class="tap right"></div>
-
-</div>
-
+<!-- BACKGROUND MUSIC -->
 <audio id="music" src="music.mp3.mp3" loop></audio>
 
 <script>
 const stories = document.querySelectorAll(".story");
-const bars = document.querySelectorAll(".progress span");
 const music = document.getElementById("music");
-const container = document.getElementById("container");
 
 let current = 0;
-let duration = 5000;
 let timer;
 let musicStarted = false;
+const duration = 4500;
 
-/* SHOW STORY */
 function showStory(index){
     stories.forEach((s,i)=>{
         s.classList.remove("active","prev");
         if(i < index) s.classList.add("prev");
 
-        const v = s.querySelector("video");
-        if(v){ v.pause(); v.currentTime = 0; }
-
-        bars[i].style.width = "0%";
+        const video = s.querySelector("video");
+        if(video){
+            video.pause();
+            video.currentTime = 0;
+        }
     });
 
     stories[index].classList.add("active");
 
     const activeVideo = stories[index].querySelector("video");
-    if(activeVideo) activeVideo.play().catch(()=>{});
-
-    startProgress(index);
-
-    if(index === 1){
-        launchConfetti();
+    if(activeVideo){
+        activeVideo.play().catch(()=>{});
     }
-}
 
-/* PROGRESS */
-function startProgress(index){
-    let w = 0;
-    clearInterval(timer);
-    timer = setInterval(()=>{
-        w++;
-        bars[index].style.width = w + "%";
-        if(w >= 100){
-            clearInterval(timer);
-            nextStory();
-        }
-    }, duration/100);
+    clearTimeout(timer);
+    timer = setTimeout(nextStory, duration);
 }
 
 function nextStory(){
@@ -240,29 +176,17 @@ function prevStory(){
     showStory(current);
 }
 
-/* CONFETTI */
-function launchConfetti(){
-    for(let i=0;i<40;i++){
-        const conf = document.createElement("div");
-        conf.className = "confetti";
-        conf.style.left = Math.random()*100 + "vw";
-        conf.style.background = `hsl(${Math.random()*360},100%,50%)`;
-        conf.style.animationDuration = (2+Math.random()*3)+"s";
-        container.appendChild(conf);
-        setTimeout(()=>conf.remove(),5000);
-    }
-}
-
-/* TAPS */
+/* FIRST TAP STARTS MUSIC (iOS SAFE) */
 document.querySelector(".tap.right").addEventListener("click",()=>{
     if(!musicStarted){
+        music.volume = 0.6;
         music.play().catch(()=>{});
         musicStarted = true;
     }
     nextStory();
 });
 
-document.querySelector(".tap.left").addEventListener("click",prevStory);
+document.querySelector(".tap.left").addEventListener("click", prevStory);
 
 showStory(current);
 </script>
